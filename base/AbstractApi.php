@@ -94,9 +94,8 @@ abstract class AbstractApi
             case self::GET:
                 if ($this->requestUri) {
                     return 'viewAction';
-                } else {
-                    return 'indexAction';
                 }
+                return 'indexAction';
             case self::POST:
                 return 'createAction';
             case self::PUT:
