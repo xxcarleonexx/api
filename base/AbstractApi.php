@@ -68,7 +68,7 @@ abstract class AbstractApi
 
     protected function response($data, $status = 500)
     {
-        header('HTTP/1.1 ' . $status . " " . $this->requestStatus($status));
+        header('HTTP/1.1 ' . $status . ' ' . $this->requestStatus($status));
         return json_encode($data);
     }
 
