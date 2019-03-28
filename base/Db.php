@@ -4,17 +4,31 @@
 namespace base;
 
 
-use mysqli;
+use PDO;
+use PDOException;
 
 class Db
 {
 
-    protected $mysqli;
+    /** @var PDO */
+    protected $conn;
 
-    public function __construct($host, $db, $name, $pass)
+    public function __construct(string $host, string $db, string $user, string $pass)
     {
-        $this->mysqli = new mysqli($host, $name, $pass, $db);
-        $this->mysqli->connect();
+        try {
+            $this->conn = new PDO("mysql:host=" . $host . ";dbname=" . $db, $user, $pass);
+            $this->conn->exec("set names utf8");
+        } catch (PDOException $exception) {
+            echo "Connection error: " . $exception->getMessage();
+        }
+    }
+
+    /**
+     * @return PDO
+     */
+    public function getConnection()
+    {
+        return $this->conn;
     }
 
 }
