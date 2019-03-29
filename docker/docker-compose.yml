@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  app:
+    build: php
+    working_dir: /api
+    volumes:
+      - ../:/api
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ../:/api
+      - ./nginx/vhost_single_domain.conf:/etc/nginx/conf.d/vhost_single_domain.conf
+    depends_on:
+      - app
+
+  db:
+    image: mysql
+    ports:
+      - 33061:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: api
+      MYSQL_USER: api
+      MYSQL_PASSWORD: apitest
