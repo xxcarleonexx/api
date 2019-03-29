@@ -13,10 +13,15 @@ class Db
     /** @var PDO */
     protected $conn;
 
-    public function __construct(string $host, string $db, string $user, string $pass)
+    private $host = 'localhost';
+    private $db = 'api';
+    private $user = 'root';
+    private $pass = '123456';
+
+    public function __construct()
     {
         try {
-            $this->conn = new PDO("mysql:host=" . $host . ";dbname=" . $db, $user, $pass);
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db, $this->user, $this->pass);
             $this->conn->exec("set names utf8");
         } catch (PDOException $exception) {
             echo "Connection error: " . $exception->getMessage();

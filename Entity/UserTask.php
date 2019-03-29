@@ -9,7 +9,9 @@ class UserTask
 {
 
     public const STATUS_NEW = 1;
+
     public const STATUS_DONE = 2;
+
     public const STATUS_ERR = 3;
 
     private $db;
@@ -25,6 +27,12 @@ class UserTask
     public function __construct(PDO $db)
     {
         $this->db = $db;
+    }
+
+    public function read()
+    {
+        $query = 'SELECT * FROM "' . $this->table . '"';
+        return $this->db->query($query);
     }
 
 }
