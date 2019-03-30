@@ -13,11 +13,11 @@ class Db
     /** @var PDO */
     protected $conn;
 
-    private $host = 'mysql';
+    private $host = 'db';
     private $db = 'api';
     private $user = 'root';
     private $pass = 'root';
-    private $port = '33061';
+    private $port = '3306';
 
     public function __construct()
     {
