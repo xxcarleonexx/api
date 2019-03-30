@@ -19,9 +19,14 @@ class UserTask
 
     /** @var int */
     public $id;
+
     /** @var int */
     public $user_id;
+
+    /** @var string */
     public $task;
+
+    /** @var int */
     public $status;
 
     public function __construct(PDO $db)
