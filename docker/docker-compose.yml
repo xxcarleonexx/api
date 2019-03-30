@@ -28,3 +28,4 @@ services:
       MYSQL_DATABASE: api
       MYSQL_USER: api
       MYSQL_PASSWORD: apitest
+    command: --innodb-use-native-aio=0
