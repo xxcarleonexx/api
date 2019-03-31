@@ -16,10 +16,10 @@ class UserTask
 
     public const PRIORITY_HIGH = 3;
 
-    /** @var PDO  */
+    /** @var PDO */
     private $db;
 
-    /** @var string  */
+    /** @var string */
     private $table = 'user_tasks';
 
     /** @var int */
@@ -65,25 +65,17 @@ class UserTask
      */
     function create()
     {
-        // query to insert record
         $query = "INSERT INTO  `" . $this->table . "` SET name=:name, status=:status, user_id=:user_id";
 
-        // prepare query
         $stmt = $this->db->prepare($query);
 
-        // sanitize
         $this->name = htmlspecialchars(strip_tags($this->name));
 
-        // bind values
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":priority", $this->priority);
         $stmt->bindParam(":user_id", $this->user_id);
 
-        // execute query
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
 
     /**
@@ -100,6 +92,39 @@ class UserTask
         $stmt->bindParam(1, $this->id);
 
         return $stmt->execute();
+    }
+
+    /**
+     * @param $from
+     * @param $perPage
+     * @return false|PDOStatement
+     */
+    public function readPaging($from, $perPage)
+    {
+        $query = 'SELECT * FROM `' . $this->table . '` LIMIT ?, ?';
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bindParam(1, $from, PDO::PARAM_INT);
+        $stmt->bindParam(2, $perPage, PDO::PARAM_INT);
+
+        $connection = $this->db->query($query);
+
+        if (false === $connection) {
+            var_dump($this->db->errorInfo());
+            throw new RuntimeException($this->db->errorCode());
+        }
+
+        return $connection;
+    }
+
+    public function count()
+    {
+        $query = 'SELECT COUNT(*) as total FROM `' . $this->table . '`';
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['total'];
     }
 
 }

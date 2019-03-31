@@ -1,6 +1,10 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
+
+use base\Db;
+use entity\UserTask;
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json; charset=UTF-8');
 
 // include database and object files
 include_once '../../base/core.php';
@@ -13,64 +17,39 @@ include_once '../objects/product.php';
 $utilities = new Utilities();
 
 // instantiate database and product object
-$database = new Database();
-$db = $database->getConnection();
+$db = new Db();
+$connection = $db->getConnection();
 
 // initialize object
-$product = new Product($db);
+$userTasks = new UserTask($connection);
 
 // query products
-$stmt = $product->readPaging($from_record_num, $records_per_page);
+$stmt = $userTasks->readPaging($from, $perPage);
 $num = $stmt->rowCount();
 
-// check if more than 0 record found
 if ($num > 0) {
 
-    // products array
-    $products_arr = [];
-    $products_arr["records"] = [];
-    $products_arr["paging"] = [];
+    $userTasks = [];
+    $userTasks['items'] = [];
+    $userTasks['paging'] = [];
 
-    // retrieve our table contents
-    // fetch() is faster than fetchAll()
-    // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        // extract row
-        // this will make $row['name'] to
-        // just $name only
-        extract($row);
-
-        $product_item = [
-            "id" => $id,
-            "name" => $name,
-            "description" => html_entity_decode($description),
-            "price" => $price,
-            "category_id" => $category_id,
-            "category_name" => $category_name,
+        $userTasks['items'][] = [
+            'id' => $row['id'],
+            'name' => $row['name'],
+            'user_id' => $row['user_id'],
+            'priority' => $row['priority'],
         ];
-
-        array_push($products_arr["records"], $product_item);
     }
 
-
-    // include paging
-    $total_rows = $product->count();
-    $page_url = "{$home_url}product/read_paging.php?";
-    $paging = $utilities->getPaging($page, $total_rows, $records_per_page, $page_url);
+    $totalRows = $userTasks->count();
+    $page_url = "{$homeUrl}userTask/read_paging.php?";
+    $paging = $utilities->getPaging($page, $totalRows, $perPage, $page_url);
     $products_arr["paging"] = $paging;
 
-    // set response code - 200 OK
     http_response_code(200);
-
-    // make it json format
-    echo json_encode($products_arr);
+    echo json_encode($userTasks);
 } else {
-
-    // set response code - 404 Not found
     http_response_code(404);
-
-    // tell the user products does not exist
-    echo json_encode(
-        ["message" => "No products found."]
-    );
+    echo json_encode(["message" => "No products found."]);
 }
