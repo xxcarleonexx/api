@@ -101,21 +101,21 @@ class UserTask
      */
     public function readPaging($from, $perPage)
     {
-        $query = 'SELECT * FROM `' . $this->table . '` LIMIT ?, ?';
+        $query = 'SELECT * FROM ' . $this->table . ' LIMIT :page, :max';
 
         $stmt = $this->db->prepare($query);
 
-        $stmt->bindParam(1, $from, PDO::PARAM_INT);
-        $stmt->bindParam(2, $perPage, PDO::PARAM_INT);
+        $stmt->bindParam(':page', $from, PDO::PARAM_INT);
+        $stmt->bindParam(':max', $perPage, PDO::PARAM_INT);
 
-        $connection = $this->db->query($query);
+        $connection = $stmt->execute();
 
         if (false === $connection) {
             var_dump($this->db->errorInfo());
             throw new RuntimeException($this->db->errorCode());
         }
 
-        return $connection;
+        return $stmt;
     }
 
     public function count()
