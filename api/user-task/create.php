@@ -21,14 +21,14 @@ $input = file_get_contents("php://input");
 $data = json_decode($input);
 
 if (
-    !empty($data->status) &&
+    !empty($data->priority) &&
     !empty($data->name) &&
     !empty($data->user_id)
 ) {
 
     // set product property values
     $userTask->name = $data->name;
-    $userTask->status = $data->status;
+    $userTask->priority = $data->priority;
     $userTask->user_id = $data->user_id;
     $userTask->created = date('Y-m-d H:i:s');
 

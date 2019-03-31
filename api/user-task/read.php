@@ -1,6 +1,7 @@
 <?php
 
 use base\Db;
+use entity\UserTask;
 
 require_once '../../base/Db.php';
 require_once '../../entity/UserTask.php';
@@ -9,7 +10,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 
 $dbConnection = (new Db())->getConnection();
-$userTask = new \entity\UserTask($dbConnection);
+$userTask = new UserTask($dbConnection);
 
 $stmt = $userTask->read();
 
