@@ -19,14 +19,14 @@ $connect = $db->getConnection();
 
 $userTask = new UserTask($connect);
 
-$postData = file_get_contents("php://input");
+$postData = file_get_contents('php://input');
 $data = json_decode($postData);
 $userTask->id = $data->id;
 
 if ($userTask->delete()) {
     http_response_code(200);
-    echo json_encode(["message" => "Product was deleted."]);
+    echo json_encode(['message' => 'Product was deleted.']);
 } else {
     http_response_code(503);
-    echo json_encode(["message" => "Unable to delete product."]);
+    echo json_encode(['message' => 'Unable to delete product.']);
 }

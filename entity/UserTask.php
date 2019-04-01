@@ -65,15 +65,15 @@ class UserTask
      */
     function create()
     {
-        $query = "INSERT INTO  `" . $this->table . "` SET name=:name, status=:status, user_id=:user_id";
+        $query = 'INSERT INTO  `' . $this->table . '` SET `name`=:name, `status`=:status, `user_id`=:user_id';
 
         $stmt = $this->db->prepare($query);
 
         $this->name = htmlspecialchars(strip_tags($this->name));
 
-        $stmt->bindParam(":name", $this->name);
-        $stmt->bindParam(":priority", $this->priority);
-        $stmt->bindParam(":user_id", $this->user_id);
+        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':priority', $this->priority);
+        $stmt->bindParam(':user_id', $this->user_id);
 
         return $stmt->execute();
     }
@@ -83,13 +83,13 @@ class UserTask
      */
     public function delete()
     {
-        $query = "DELETE FROM `" . $this->table . "` WHERE id = ?";
+        $query = 'DELETE FROM `' . $this->table . '` WHERE id = :id';
 
         $stmt = $this->db->prepare($query);
 
         $this->id = htmlspecialchars(strip_tags($this->id));
 
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(':id', $this->id);
 
         return $stmt->execute();
     }
@@ -121,8 +121,7 @@ class UserTask
     public function count()
     {
         $query = 'SELECT COUNT(*) as total FROM `' . $this->table . '`';
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
+        $stmt = $this->db->query($query);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['total'];
     }
