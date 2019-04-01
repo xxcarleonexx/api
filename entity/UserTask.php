@@ -65,17 +65,22 @@ class UserTask
      */
     function create()
     {
-        $query = 'INSERT INTO  `' . $this->table . '` SET `name`=:name, `status`=:status, `user_id`=:user_id';
+        $query = 'INSERT INTO  `' . $this->table . '` SET `title`=:title, `priority`=:priority';
 
         $stmt = $this->db->prepare($query);
 
         $this->name = htmlspecialchars(strip_tags($this->name));
 
-        $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':title', $this->name);
         $stmt->bindParam(':priority', $this->priority);
-        $stmt->bindParam(':user_id', $this->user_id);
 
-        return $stmt->execute();
+        $connection = $stmt->execute();
+
+        if (false === $connection) {
+            var_dump($this->db->errorInfo());
+            throw new RuntimeException($this->db->errorCode());
+        }
+        return $connection;
     }
 
     /**
